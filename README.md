@@ -5,7 +5,7 @@
 # Table of Contents
 
 - [Project Structure](#project-structure)
-- [MongoDb Setup](#mongodb-setup)
+- [MongoDB Setup](#mongodb-setup)
 
 ## Project Structure
 
