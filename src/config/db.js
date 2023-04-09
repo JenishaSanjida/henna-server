@@ -5,7 +5,11 @@ const Portfolio = require("../models/portfolio");
 const Rating = require("../models/rating");
 const Review = require("../models/review");
 
-mongoose.connect("mongodb://localhost:27017/henna_db");
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
+
+mongoose.connect(
+  `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`
+);
 
 User.ensureIndexes();
 Appointment.ensureIndexes();
