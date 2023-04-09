@@ -6,6 +6,7 @@
 
 - [Project Structure](#project-structure)
 - [MongoDB Setup](#mongodb-setup)
+- [Possible Errors]()
 
 ## Project Structure
 
@@ -75,4 +76,15 @@ services:
       - type: bind
         source: ./data
         target: /data/db
+```
+
+## Possible Errors
+
+Mongoose couldn't connect to the mongodb as I had a volume which didn't have root user. That's why I had to remove my volume to connect mongodb successfully.
+
+```sh
+docker-compose stop
+docker-compose rm
+docker volume rm <your-volume>
+docker-compose up --build -d
 ```
