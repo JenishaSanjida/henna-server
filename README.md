@@ -6,7 +6,8 @@
 
 - [Project Structure](#project-structure)
 - [MongoDB Setup](#mongodb-setup)
-- [Possible Errors]()
+- [Up and Run](#up-and-run)
+- [Possible Errors](#possible-errors)
 
 ## Project Structure
 
@@ -76,6 +77,14 @@ services:
       - type: bind
         source: ./data
         target: /data/db
+```
+
+## Up and Run
+
+```sh
+git clone https://github.com/shahnawaz-pabon/henna-server.git
+cd henna-server
+docker-compose up --build
 ```
 
 ## Possible Errors
