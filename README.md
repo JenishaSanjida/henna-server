@@ -8,6 +8,7 @@
 - [MongoDB Setup](#mongodb-setup)
 - [Up and Run](#up-and-run)
 - [Possible Errors](#possible-errors)
+- [Resources](#resources)
 
 ## Project Structure
 
@@ -97,3 +98,5 @@ docker-compose rm
 docker volume rm <your-volume>
 docker-compose up --build -d
 ```
+
+## Resources
