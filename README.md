@@ -6,7 +6,9 @@
 
 - [Project Structure](#project-structure)
 - [MongoDB Setup](#mongodb-setup)
-- [Possible Errors]()
+- [Up and Run](#up-and-run)
+- [Possible Errors](#possible-errors)
+- [Resources](#resources)
 
 ## Project Structure
 
@@ -78,6 +80,14 @@ services:
         target: /data/db
 ```
 
+## Up and Run
+
+```sh
+git clone https://github.com/shahnawaz-pabon/henna-server.git
+cd henna-server
+docker-compose up --build
+```
+
 ## Possible Errors
 
 Mongoose couldn't connect to the mongodb as I had a volume which didn't have root user. That's why I had to remove my volume to connect mongodb successfully.
@@ -88,3 +98,5 @@ docker-compose rm
 docker volume rm <your-volume>
 docker-compose up --build -d
 ```
+
+## Resources
