@@ -5,7 +5,7 @@ const db = require("./config/db");
 // Import API routes
 // const authRoutes = require('./routes/auth');
 const userRouter = require("./routes/user");
-// const customerRoutes = require('./routes/customers');
+const placeRouter = require("./routes/place");
 
 // Set up the server
 const app = express();
@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use("/uploads", express.static("/app/uploads")); // uploaded files
 // Use API routes
 app.use("/api", userRouter);
+app.use("/api/place", placeRouter);
 // app.use('/api/auth', authRoutes);
 // app.use('/api/customers', customerRoutes);
 
