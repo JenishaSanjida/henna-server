@@ -19,6 +19,34 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
+router.post("/user/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if the user exists in the database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).send({ message: "Invalid email or password" });
+    }
+
+    // Check if the password is correct
+    // const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (user.password != password) {
+      return res.status(401).send({ message: "Invalid email or password" });
+    }
+
+    // Generate JWT token
+    // const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+
+    // Return the token
+    // return res.send({ token });
+    res.send({ data: {}, message: "", status: "success" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Internal server error" });
+  }
+});
+
 router.get("/check", async (req, res) => {
   res
     .status(200)
