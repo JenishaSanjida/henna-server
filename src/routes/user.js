@@ -54,9 +54,32 @@ router.get("/check", async (req, res) => {
 });
 
 router.get("/user/list", async (req, res) => {
-  // API logic for getting users
-  const users = await User.find().populate("portfolio");
-  res.send({ data: users, message: "", status: "success" });
+  const { page = 1, size = 10 } = req.query;
+
+  /**
+   * Pagination Details
+   */
+  const count = await User.countDocuments();
+  const totalPages = Math.ceil(count / size);
+  const currentPage = parseInt(page);
+
+  // API logic for getting users with pagination
+  const users = await User.find()
+    .skip((currentPage - 1) * size)
+    .limit(size)
+    .populate("portfolio");
+
+  // const users = await User.find().populate("portfolio"); // getting all the users
+
+  const metaData = {
+    currentPage,
+    totalPages,
+    totalRecords: count,
+    nextPage: currentPage < totalPages ? currentPage + 1 : null,
+    prevPage: currentPage > 1 ? currentPage - 1 : null,
+  };
+
+  res.send({ data: users, meta: metaData, message: "", status: "success" });
 });
 
 router.post("/user/save", async (req, res) => {
