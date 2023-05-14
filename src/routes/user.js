@@ -121,6 +121,9 @@ router.put("/user/:id", (req, res) => {
   // API logic for updating a user
 });
 
+// Update or create user's schedule
+router.post("/user/:id/schedule", async (req, res) => {});
+
 router.delete("/user/:id", (req, res) => {
   // API logic for deleting a user
 });
