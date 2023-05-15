@@ -24,53 +24,56 @@ const scheduleSchema = new mongoose.Schema({
   },
 });
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    enum: ["customer", "designer"],
-    required: true,
-    default: "customer",
-  },
-  address: {
-    type: String,
-  },
-  territory: {
-    type: String,
-  },
-  schedule: {
-    type: [scheduleSchema],
-    required: true,
-  },
-  portfolio: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Portfolio",
-  },
-  ratings: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Rating",
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
-  ],
-}, { timestamps: true });
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["customer", "designer"],
+      required: true,
+      default: "customer",
+    },
+    address: {
+      type: String,
+    },
+    territory: {
+      type: String,
+    },
+    schedule: {
+      type: [scheduleSchema],
+      required: true,
+    },
+    portfolio: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Portfolio",
+    },
+    ratings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Rating",
+      },
+    ],
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 const User = mongoose.model("User", userSchema);
 
