@@ -24,6 +24,8 @@
     - rating.js
     - review.js
     - user.js
+    - day.js
+    - timeslot.js
   - routes/
     - appointment.js
     - auth.js
