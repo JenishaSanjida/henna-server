@@ -102,3 +102,10 @@ docker-compose up --build -d
 ```
 
 ## Resources
+
+### See docker logs
+
+```sh
+# see last 2 hour's logs
+docker logs --since=2h <container_id>
+```
