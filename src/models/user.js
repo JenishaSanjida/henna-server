@@ -1,16 +1,32 @@
 const mongoose = require("mongoose");
 
 const scheduleSchema = new mongoose.Schema({
-  day: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Day",
+  dayOfWeek: {
+    type: String,
+    enum: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
     required: true,
   },
-  timeSlot: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "TimeSlot",
-    required: true,
-  },
+  timeSlots: [
+    {
+      time: {
+        type: String,
+        required: true,
+      },
+      isBooked: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+
   // day: {
   //   type: String,
   //   enum: [
