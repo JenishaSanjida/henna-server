@@ -125,7 +125,64 @@ router.put("/user/:id", (req, res) => {
 });
 
 // Update or create user's schedule
-router.post("/user/:id/schedule", async (req, res) => {});
+// router.post("/user/:id/schedule", async (req, res) => {});
+
+// Update or create user's schedule
+router.post("/user/:id/schedule/save", async (req, res) => {
+  const userId = req.params.id;
+  const { dayOfWeek, timeSlot } = req.body;
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find the schedule for the given day of the week
+    const daySchedule = user.schedule.find(
+      (schedule) => schedule.dayOfWeek === dayOfWeek
+    );
+
+    if (!daySchedule) {
+      // Create a new schedule for the day if it doesn't exist
+      user.schedule.push({
+        dayOfWeek,
+        timeSlots: [
+          {
+            time: timeSlot,
+            isBooked: false,
+          },
+        ],
+      });
+    } else {
+      // Check if the time slot is already booked
+      const existingTimeSlot = daySchedule.timeSlots.find(
+        (slot) => slot.time === timeSlot
+      );
+
+      if (existingTimeSlot && existingTimeSlot.isBooked) {
+        return res.status(400).json({ error: "Time slot already booked" });
+      }
+
+      // Check if the time slot exists in the schedule
+      if (!existingTimeSlot) {
+        daySchedule.timeSlots.push({
+          time: timeSlot,
+          isBooked: false,
+        });
+      }
+    }
+
+    // Save the updated user schedule
+    await user.save();
+
+    return res.status(200).json({ message: "Schedule saved successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
 
 router.delete("/user/:id", (req, res) => {
   // API logic for deleting a user
