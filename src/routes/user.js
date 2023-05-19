@@ -82,6 +82,9 @@ router.get("/user/list", async (req, res) => {
   res.send({ data: users, meta: metaData, message: "", status: "success" });
 });
 
+/**
+ * User create API
+ */
 router.post("/user/save", async (req, res) => {
   // API logic for creating a user
   try {
@@ -124,10 +127,9 @@ router.put("/user/:id", (req, res) => {
   // API logic for updating a user
 });
 
-// Update or create user's schedule
-// router.post("/user/:id/schedule", async (req, res) => {});
-
-// Update or create user's schedule
+/**
+ * User's schedule save API
+ */
 router.post("/user/:id/schedule/save", async (req, res) => {
   const userId = req.params.id;
   const { dayOfWeek, timeSlot } = req.body;
@@ -188,7 +190,10 @@ router.delete("/user/:id", (req, res) => {
   // API logic for deleting a user
 });
 
-// POST route for adding a new image to a user's portfolio
+/**
+ * Upload image to user's profile API
+ * POST route for adding a new image to a user's portfolio
+ */
 router.post(
   "/users/:id/portfolio/images",
   upload.single("image"),

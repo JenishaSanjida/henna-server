@@ -6,6 +6,7 @@ const db = require("./config/db");
 // const authRoutes = require('./routes/auth');
 const userRouter = require("./routes/user");
 const placeRouter = require("./routes/place");
+const appointmentRouter = require("./routes/appointment");
 
 // Set up the server
 const app = express();
@@ -20,6 +21,7 @@ app.use("/uploads", express.static("/app/uploads")); // uploaded files
 // Use API routes
 app.use("/api", userRouter);
 app.use("/api/place", placeRouter);
+app.use("/api/appointment", appointmentRouter);
 // app.use('/api/auth', authRoutes);
 // app.use('/api/customers', customerRoutes);
 
