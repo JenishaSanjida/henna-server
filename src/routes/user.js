@@ -5,6 +5,7 @@ const path = require("path");
 // const Portfolio = require("../models/portfolio");
 const { User, Portfolio } = require("../config/db");
 const multer = require("multer");
+const { getDayOfWeek } = require("../utils/helpers");
 // Set up Multer storage for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -232,5 +233,48 @@ router.post(
     }
   }
 );
+
+// Get available schedule for a user on a specific date
+router.get("/user/get/schedules", async (req, res) => {
+  const userId = req.query.userId;
+  const requestedDate = req.query.date;
+
+  console.log("userId,requestedDate");
+  console.log(userId, requestedDate);
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Convert the requested date string to a JavaScript Date object
+    const date = new Date(requestedDate);
+
+    // Get the string representation of the day of the week
+    const dayOfWeek = getDayOfWeek(date.getDay());
+
+    // Find the schedule for the requested day
+    const daySchedule = user.schedule.find(
+      (schedule) => schedule.dayOfWeek === dayOfWeek
+    );
+
+    if (!daySchedule) {
+      return res.status(400).json({ error: "Invalid day of the week" });
+    }
+
+    // Filter out the booked time slots for the requested date
+    // const availableTimeSlots = daySchedule.timeSlots.filter(
+    //   (slot) => !slot.isBooked
+    // );
+
+    return res.status(200).json({ schedule: daySchedule });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
 
 module.exports = router;
