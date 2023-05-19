@@ -61,6 +61,15 @@ const userSchema = new mongoose.Schema(
     territory: {
       type: String,
     },
+    division: {
+      type: String,
+    },
+    district: {
+      type: String,
+    },
+    thana: {
+      type: String,
+    },
     schedule: {
       type: [scheduleSchema],
       required: true,

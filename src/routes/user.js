@@ -92,6 +92,9 @@ router.post("/user/save", async (req, res) => {
       password: req.body.password,
       role: req.body.role,
       address: req.body.address,
+      division: req.body.division,
+      district: req.body.district,
+      thana: req.body.thana,
       territory: req.body.territory,
     });
 
