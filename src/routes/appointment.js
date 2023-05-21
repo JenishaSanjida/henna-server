@@ -68,4 +68,29 @@ router.post("/save", async (req, res) => {
   }
 });
 
+// Get appointments for a user
+router.get("/list-by-user/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find the appointments for the user
+    const appointments = await Appointment.find({ customer: userId })
+      .populate("customer", "name")
+      .populate("designer", "name")
+      .exec();
+
+    return res.status(200).json({ appointments });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 module.exports = router;
