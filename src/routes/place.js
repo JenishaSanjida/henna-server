@@ -7,7 +7,12 @@ router.get("/divisions", async (req, res) => {
   const placeNames = Object.keys(places);
   res
     .status(200)
-    .json({ data: placeNames, message: "API successful", status: "success" });
+    .json({
+      data: placeNames,
+      message: "API successful",
+      status: "success",
+      endpoint: "all-places",
+    });
 });
 
 router.get("/:division", (req, res) => {
@@ -22,6 +27,7 @@ router.get("/:division", (req, res) => {
     data: subPlaceNames,
     message: "API successful",
     status: "success",
+    endpoint: "by-division",
   });
 });
 
@@ -42,6 +48,7 @@ router.get("/:division/:district", (req, res) => {
     data: subPlaceData,
     message: "API successful",
     status: "success",
+    endpoint: "by-district",
   });
 });
 
