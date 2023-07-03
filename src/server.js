@@ -8,6 +8,7 @@ const userRouter = require("./routes/user");
 const placeRouter = require("./routes/place");
 const appointmentRouter = require("./routes/appointment");
 const authRoutes = require("./routes/auth");
+const authenticateToken = require("./middleware");
 
 // Set up the server
 const app = express();
@@ -25,6 +26,14 @@ app.use("/api/place", placeRouter);
 app.use("/api/appointment", appointmentRouter);
 app.use("/api/auth", authRoutes);
 // app.use('/api/customers', customerRoutes);
+
+// Protected routes
+app.get("/api/protected", authenticateToken, (req, res) => {
+  console.log("Authenticated user ID:", req.userId);
+  // Access the authenticated user ID from req.userId
+  const userId = req.userId;
+  res.json({ message: `Protected route accessed by user ${userId}` });
+});
 
 // app.get("/users", async (req, res) => {
 //   const users = await db.User.find();
