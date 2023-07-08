@@ -1,6 +1,7 @@
 // user.js
 const express = require("express");
 const path = require("path");
+const authenticateToken = require("../middleware");
 // const User = require("../models/user");
 // const Portfolio = require("../models/portfolio");
 const { User, Portfolio } = require("../config/db");
@@ -54,7 +55,7 @@ router.get("/check", async (req, res) => {
     .json({ data: {}, message: "API successful", status: "success" });
 });
 
-router.get("/user/list", async (req, res) => {
+router.get("/user/list", authenticateToken, async (req, res) => {
   const { page = 1, size = 10 } = req.query;
 
   /**
