@@ -3,7 +3,7 @@ const router = express.Router();
 const authenticateToken = require("../middleware");
 const places = require("../constants/places.json");
 
-router.get("/divisions", authenticateToken, async (req, res) => {
+router.get("/divisions", async (req, res) => {
   const placeNames = Object.keys(places);
   res.status(200).json({
     data: placeNames,
