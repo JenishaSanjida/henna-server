@@ -56,17 +56,34 @@ router.get("/check", async (req, res) => {
 });
 
 router.get("/user/list", authenticateToken, async (req, res) => {
-  const { page = 1, size = 10 } = req.query;
+  const { page = 1, size = 10, division, district, thana, role } = req.query;
+
+  // Create a filter object to store the search criteria
+  const filter = {};
+
+  // Add filters based on the query parameters
+  if (division) {
+    filter.division = division;
+  }
+  if (district) {
+    filter.district = district;
+  }
+  if (thana) {
+    filter.thana = thana;
+  }
+  if (role) {
+    filter.role = role;
+  }
 
   /**
    * Pagination Details
    */
-  const count = await User.countDocuments();
+  const count = await User.countDocuments(filter);
   const totalPages = Math.ceil(count / size);
   const currentPage = parseInt(page);
 
   // API logic for getting users with pagination
-  const users = await User.find()
+  const users = await User.find(filter)
     .skip((currentPage - 1) * size)
     .limit(size)
     .populate("portfolio");
