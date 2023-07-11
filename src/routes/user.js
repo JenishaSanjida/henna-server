@@ -154,7 +154,7 @@ router.post("/user/:id/schedule/save", async (req, res) => {
   const { dayOfWeek, timeSlot } = req.body;
   try {
     // Find the user by ID
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("portfolio");
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -198,7 +198,9 @@ router.post("/user/:id/schedule/save", async (req, res) => {
     // Save the updated user schedule
     await user.save();
 
-    return res.status(200).json({ message: "Schedule saved successfully" });
+    return res
+      .status(200)
+      .json({ message: "Schedule saved successfully", user: user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error" });
