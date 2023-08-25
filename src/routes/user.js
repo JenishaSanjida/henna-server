@@ -1,5 +1,6 @@
 // user.js
 const express = require("express");
+const fs = require("fs");
 const path = require("path");
 const authenticateToken = require("../middleware");
 // const User = require("../models/user");
@@ -123,7 +124,7 @@ router.post("/user/save", async (req, res) => {
     // create a new portfolio for the user
     const portfolio = new Portfolio({
       designer: user._id,
-      designs: ["https://randomuser.me/api/portraits/men/75.jpg"],
+      designs: [],
     });
 
     // save the portfolio
@@ -250,6 +251,48 @@ router.post(
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Error adding image to portfolio" });
+    }
+  }
+);
+
+// Update user's avatar
+router.put(
+  "/user/:userId/avatar",
+  upload.single("avatar"),
+  async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Delete the previous avatar file if it exists
+      if (user.avatar) {
+        const previousAvatarPath = path.join(
+          __dirname,
+          "../../uploads",
+          user.avatar
+        );
+        if (fs.existsSync(previousAvatarPath)) {
+          fs.unlinkSync(previousAvatarPath);
+        }
+      }
+
+      // Update the user's avatar URL in the User model
+      user.avatar = req.file.filename;
+      await user.save();
+
+      res.status(200).json({
+        message: "Avatar updated successfully",
+        avatar: req.file.filename,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 );
