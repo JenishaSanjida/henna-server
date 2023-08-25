@@ -71,6 +71,7 @@ router.post("/save", async (req, res) => {
 // Get appointments for a user
 router.get("/list-by-user/:id", async (req, res) => {
   const userId = req.params.id;
+  const userRole = req.query.role;
 
   try {
     // Find the user by ID
@@ -80,11 +81,20 @@ router.get("/list-by-user/:id", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    var appointments;
+
     // Find the appointments for the user
-    const appointments = await Appointment.find({ customer: userId })
-      .populate("customer", "name")
-      .populate("designer", "name")
-      .exec();
+    if (userRole == "customer") {
+      appointments = await Appointment.find({ customer: userId })
+        .populate("customer", "name")
+        .populate("designer", "name")
+        .exec();
+    } else {
+      appointments = await Appointment.find({ designer: userId })
+        .populate("customer", "name")
+        .populate("designer", "name")
+        .exec();
+    }
 
     return res.status(200).json({ appointments });
   } catch (error) {

@@ -340,4 +340,48 @@ router.get("/user/get/schedules", async (req, res) => {
   }
 });
 
+// Delete image from user's portfolio
+router.delete("/user/:id/portfolio/images/:imageName", async (req, res) => {
+  const userId = req.params.id;
+  const imageName = req.params.imageName;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const portfolio = await Portfolio.findOne({ designer: user._id });
+
+    if (!portfolio) {
+      return res.status(404).json({ error: "Portfolio not found" });
+    }
+
+    // Find the index of the image in the portfolio
+    const imageIndex = portfolio.designs.indexOf(imageName);
+
+    if (imageIndex === -1) {
+      return res.status(404).json({ error: "Image not found in portfolio" });
+    }
+
+    // Remove the image from the portfolio array
+    portfolio.designs.splice(imageIndex, 1);
+    await portfolio.save();
+
+    // Delete the image file from the server
+    const imagePath = path.join(__dirname, "../../uploads", imageName);
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+
+    res
+      .status(200)
+      .json({ message: "Image deleted from portfolio", portfolio });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting image from portfolio" });
+  }
+});
+
 module.exports = router;
