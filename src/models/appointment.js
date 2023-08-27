@@ -25,6 +25,14 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["pending", "booked", "cancelled", "completed"],
       default: "pending",
     },
+    address: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

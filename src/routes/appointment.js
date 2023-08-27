@@ -6,7 +6,7 @@ const { User, Appointment } = require("../config/db");
 
 // Create an appointment
 router.post("/save", async (req, res) => {
-  const { customerId, designerId, date, time } = req.body;
+  const { customerId, designerId, date, time, address, phone } = req.body;
 
   try {
     // Find the customer and designer by their IDs
@@ -50,6 +50,8 @@ router.post("/save", async (req, res) => {
       date: appointmentDate,
       time,
       status: "booked",
+      address: address,
+      phone: phone,
     });
 
     // Update the isBooked status in the schedule
@@ -86,13 +88,13 @@ router.get("/list-by-user/:id", async (req, res) => {
     // Find the appointments for the user
     if (userRole == "customer") {
       appointments = await Appointment.find({ customer: userId })
-        .populate("customer", "name")
-        .populate("designer", "name")
+        .populate("customer", "name avatar role")
+        .populate("designer", "name avatar role")
         .exec();
     } else {
       appointments = await Appointment.find({ designer: userId })
-        .populate("customer", "name")
-        .populate("designer", "name")
+        .populate("customer", "name avatar role")
+        .populate("designer", "name avatar role")
         .exec();
     }
 
