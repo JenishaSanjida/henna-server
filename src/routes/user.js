@@ -5,7 +5,7 @@ const path = require("path");
 const authenticateToken = require("../middleware");
 // const User = require("../models/user");
 // const Portfolio = require("../models/portfolio");
-const { User, Portfolio } = require("../config/db");
+const { User, Portfolio, Appointment } = require("../config/db");
 const multer = require("multer");
 const { getDayOfWeek } = require("../utils/helpers");
 // Set up Multer storage for file uploads
@@ -383,5 +383,68 @@ router.delete("/user/:id/portfolio/images/:imageName", async (req, res) => {
     res.status(500).json({ message: "Error deleting image from portfolio" });
   }
 });
+
+// Delete a specific time slot from user's schedule for a specific day
+router.delete(
+  "/user/:id/schedule/:dayOfWeek/timeSlots/:time",
+  async (req, res) => {
+    const userId = req.params.id;
+    const dayOfWeek = req.params.dayOfWeek;
+    const time = req.params.time;
+
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Check if there are appointments for the specified day and time slot
+      const existingAppointments = await Appointment.findOne({
+        designer: userId,
+        date: { $gte: new Date() }, // Only consider future appointments
+        "timeSlot.dayOfWeek": dayOfWeek,
+        "timeSlot.time": time,
+      });
+
+      if (existingAppointments) {
+        return res.status(400).json({
+          error: "Cannot delete time slot due to existing appointments",
+        });
+      }
+
+      // Find the schedule entry for the specified dayOfWeek
+      const scheduleEntry = user.schedule.find(
+        (schedule) => schedule.dayOfWeek === dayOfWeek
+      );
+
+      if (!scheduleEntry) {
+        return res
+          .status(404)
+          .json({ error: "Schedule not found for the specified day" });
+      }
+
+      // Find the index of the time slot in the timeSlots array
+      const timeSlotIndex = scheduleEntry.timeSlots.findIndex(
+        (slot) => slot.time === time
+      );
+
+      if (timeSlotIndex === -1) {
+        return res
+          .status(404)
+          .json({ error: "Time slot not found for the specified time" });
+      }
+
+      // Remove the time slot from the timeSlots array
+      scheduleEntry.timeSlots.splice(timeSlotIndex, 1);
+      await user.save();
+
+      res.status(200).json({ message: "Time slot deleted successfully", user });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error deleting time slot" });
+    }
+  }
+);
 
 module.exports = router;
