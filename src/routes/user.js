@@ -1,5 +1,6 @@
 // user.js
 const express = require("express");
+const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const authenticateToken = require("../middleware");
@@ -446,5 +447,42 @@ router.delete(
     }
   }
 );
+
+// Define the cron schedule
+cron.schedule("0 0 * * *", async () => {
+  try {
+    // Get current date and time
+    const currentDate = new Date();
+
+    // Find all designers
+    const designers = await User.find({ role: "designer" });
+
+    for (const designer of designers) {
+      const previousDay = new Date();
+      previousDay.setDate(currentDate.getDate() - 1);
+      const dayOfWeek = previousDay.toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+
+      // Find the schedule for the previous day
+      const scheduleEntry = designer.schedule.find(
+        (schedule) => schedule.dayOfWeek === dayOfWeek
+      );
+
+      if (scheduleEntry) {
+        // Update the isBooked status for each time slot
+        for (const timeSlot of scheduleEntry.timeSlots) {
+          timeSlot.isBooked = false;
+        }
+
+        await designer.save();
+      }
+    }
+
+    console.log("Designer schedules updated successfully");
+  } catch (error) {
+    console.error("Error updating designer schedules:", error);
+  }
+});
 
 module.exports = router;
