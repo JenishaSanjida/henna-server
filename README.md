@@ -2,6 +2,10 @@
   <h1>🧤 Henna Server 🧤</h1>
 </div>
 
+<br>
+
+**This is the backend of the following frontend:** [https://github.com/JenishaSanjida/henna-tale.git](https://github.com/JenishaSanjida/henna-tale.git)
+
 # Table of Contents
 
 - [Project Structure](#project-structure)
